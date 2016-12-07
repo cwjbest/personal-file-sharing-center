@@ -1,2 +1,4 @@
 # the directory you want to share
-root = "/home/upload/"
+# -*- coding: UTF-8 -*-
+root = "."
+host="http://172.21.6.185:8080/"

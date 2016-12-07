@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 #!/usr/bin/env python
 import web
 import os
@@ -7,6 +8,7 @@ from urllib import quote
 
 # load config file
 root = config.root
+host = config.host
 
 types = [
     ".h",".cpp",".cxx",".cc",".c",".cs",".html",".js",
@@ -14,7 +16,7 @@ types = [
     ".gif",".ai",".psd",".mp3",".avi",".rmvb",".mp4",".wmv",
     ".mkv",".doc",".docx",".ppt",".pptx",".xls",".xlsx",
     ".zip",".tar",".gz",".7z",".rar",".pdf",".txt",".exe",
-    ".apk"
+    ".apk",".torrent",".srt",".pyc"
 ]
 
 render = web.template.render('template')
@@ -23,7 +25,6 @@ urls = (
     '/favicon.ico',"Ico",
     '/(.*)','Index',
 )
-
 class Ico:
     def GET(self):
         return open("static/img/favicon.ico").read()
@@ -31,28 +32,44 @@ class Ico:
 class Index:
     def GET(self,path):
         # list all the files
-        if path == '':
-            list = []
-            item = os.listdir(root)
-            item = sorted(item, key = str.lower)
-            
+        _path=path
+        path = os.path.join(root, path)
+        if not os.path.exists(path):
+        	yield "文件不存在！"
+        if os.path.isdir(path):
+            flist = []
+            item = os.listdir(path)
+            if not _path=='':
+                # 返回上级
+                temp={}
+                temp['name']="上级目录"
+                temp['type']="dir"
+                temp["time"]=""
+                temp["size"]=""
+                temp["encode"]=host+os.path.dirname(_path)
+                temp["iftag"]=True
+                print "FPATH::",temp["encode"]
+                flist.append(temp)
             for i in item:
-                if i[0] == '.' or os.path.isdir(os.path.join(root, i)):
+                if i[0] == '.':
                     continue
                 temp = {}
-                temp['name'] = i 
+                temp['name'] = i
                 temp['type'] = '.' + i.split('.')[-1]
                 
                 try:
                     types.index(temp['type'])
                 except:
-                    temp['type'] = "general"
+                    if os.path.isdir(os.path.join(path, i)):
+                        temp['type'] = "dir"
+                    else:
+                        temp['type'] = "general"
 
 
                 temp["time"] = time.strftime("%H:%M:%S %Y-%m-%d",
-                        time.localtime(os.path.getmtime(os.path.join(root, i))))
+                        time.localtime(os.path.getmtime(os.path.join(path, i))))
                 
-                size = os.path.getsize(os.path.join(root, i))
+                size = os.path.getsize(os.path.join(path, i))
                 if size < 1024:
                     size = str(size) + ".0 B"
                 elif size < 1024 * 1024:
@@ -63,21 +80,30 @@ class Index:
                     size = "%0.1f GB" % (size/1024.0/1024.0/1024.0)
                 
                 temp["size"] = size
-                temp["encode"] = quote(i)
+                temp["encode"] = host+quote(os.path.join(_path, i).encode('utf-8'))
+                temp["iftag"]=False
 
-                list.append(temp)
+                flist.append(temp)
             
-            return render.layout(list) 
+            yield render.layout(flist) 
         
         # return a file
         else:
             web.header('Content-Type','application/octet-stream')
-            web.header('Content-disposition', 'attachment; filename=%s' % path)
-            file = open(os.path.join(root,path))
+            web.header('Accept-Ranges','bytes')
+            web.header('Access-Control-Allow-Origin','#')
+            web.header('Content-disposition', 'attachment; filename=%s' % os.path.split(_path)[1])
             size = os.path.getsize(os.path.join(root,path))
             web.header('Content-Length','%s' % size)
-            return file.read()
-            
+            with open(os.path.join(root,path)) as file:
+                # 增加断点续传
+                if web.ctx.env.get('HTTP_RANGE'):
+                    web.ctx.status='206 Partial Content'
+                    startp=int(web.ctx.env['HTTP_RANGE'].split('=')[1].split('-')[0])
+                    file.seek(startp)
+                for data in file:
+                    yield data
+
     def DELETE(self,filename):
         try:
             filename = filename.encode('utf-8') 

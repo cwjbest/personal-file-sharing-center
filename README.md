@@ -31,8 +31,12 @@ If you have no idea how to set nginx and uwsgi, the following may help...
 * Multiple file upload.
 * User authentication.
 
-## Screenshot
-<img src="http://www.orzace.com/wp-content/uploads/2013/04/28J785ZZQ_LQ17_J.jpg"/>
+## 对[原作者](https://github.com/goace/personal-file-sharing-center/network)添加
+添加目录支持和文件断点下载，以及大文件的下载
+Add directory support and file breakpoint download, as well as large files can be downloaded
+## 注意(Careful)
+一定要把`config.py`里的host修改成你自己的，修改端口好像要到web文件夹里修改
+Be sure to change the `host` in file `config.py`into your own, or it can't work.
 
 ## License
 Iron Man is available under the GPLv2. See the LICENSE file for more info.
