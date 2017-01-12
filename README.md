@@ -37,6 +37,8 @@ Add directory support and file breakpoint download, as well as large files can b
 ## 注意(Careful)
 一定要把`config.py`里的host修改成你自己的，修改端口好像要到web文件夹里修改
 Be sure to change the `host` in file `config.py`into your own, or it can't work.
+##增加汉字拼音的排序
+感谢https://github.com/cleverdeng/pinyin.py
 
 ## License
 Iron Man is available under the GPLv2. See the LICENSE file for more info.

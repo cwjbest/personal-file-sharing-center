@@ -1,3 +1,4 @@
+
 # -*- coding: UTF-8 -*-
 #!/usr/bin/env python
 import web
@@ -10,8 +11,6 @@ from pinyin import PinYin
 # load config file
 root = config.root
 host = config.host
-py = PinYin(dict_file='pinyin/word.data')
-py.load_word()
 
 types = [
     ".h",".cpp",".cxx",".cc",".c",".cs",".html",".js",
@@ -33,17 +32,10 @@ class Ico:
         return open("static/img/favicon.ico").read()
 
 def cmp(x,y):
-    xpy=py.hanzi2pinyin(x.replace(' ',''))
-    ypy=py.hanzi2pinyin(y.replace(' ',''))
-    for i in range(0,len(xpy)):
-        try:
-            if(not xpy[i] == ypy[i]):
-                return 1 if xpy[i] > ypy[i] else -1
-            else:
-                continue
-        except:
-            return 1
-    return 0
+    for i in xrange(0,len(x)):
+        if 
+
+def filenamesort(filelist):
 
 
 class Index:
@@ -55,8 +47,7 @@ class Index:
         	yield "文件不存在！"
         if os.path.isdir(path):
             flist = []
-            item = os.listdir(path)
-            item=sorted(item,cmp=cmp)
+            item = os.listdir(path)`
             if not _path=='':
                 # 返回上级
                 temp={}
@@ -66,7 +57,7 @@ class Index:
                 temp["size"]=""
                 temp["encode"]=host+os.path.dirname(_path)
                 temp["iftag"]=True
-                # print "FPATH::",temp["encode"]
+                print "FPATH::",temp["encode"]
                 flist.append(temp)
             for i in item:
                 if i[0] == '.':
@@ -136,7 +127,7 @@ class Index:
         x = web.input(file={})
         
         if 'file' in x:
-            filepath= x.file.filename.replace('\\','/')     # replaces the windows-style slashes with linux ones.
+            filepath= x.file.filename.replace('\','/')     # replaces the windows-style slashes with linux ones.
             filename = filepath.split('/')[-1]              # splits the and chooses the last part (the filename with extension)
             filename = unicode(filename, "utf8")
             fout = open(os.path.join(root,filename),'w')    # creates the file where the uploaded file should be stored
