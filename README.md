@@ -40,7 +40,7 @@ Add directory support and file breakpoint download, as well as large files can b
 
 Be sure to change the `host` in file `config.py`into your own, or it can't work.
 ##增加汉字拼音的排序
-感谢https://github.com/cleverdeng/pinyin.py
+感谢[cleverdeng](https://github.com/cleverdeng/pinyin.py)提供的拼音库
 
 ## License
 Iron Man is available under the GPLv2. See the LICENSE file for more info.
