@@ -6,11 +6,16 @@ import time
 import config
 from urllib import quote
 from pinyin import PinYin
+import magic
+import shutil
+
+if config.uncompression_enable:
+    import uncompression
 
 # load config file
 root = config.root
 host = config.host
-py = PinYin(dict_file='pinyin/word.data')
+py = PinYin(dict_file=os.getcwd()+'/pinyin/word.data')
 py.load_word()
 
 types = [
@@ -22,10 +27,13 @@ types = [
     ".apk",".torrent",".srt",".pyc"
 ]
 
+preview=[]
+
 render = web.template.render('template')
 
 urls = (
     '/favicon.ico',"Ico",
+    '/Unpack','Unpack',
     '/(.*)','Index',
 )
 class Ico:
@@ -52,7 +60,7 @@ class Index:
         _path=path
         path = os.path.join(root, path)
         if not os.path.exists(path):
-        	yield "文件不存在！"
+            yield "文件不存在！"
         if os.path.isdir(path):
             flist = []
             item = os.listdir(path)
@@ -66,6 +74,7 @@ class Index:
                 temp["size"]=""
                 temp["encode"]=host+os.path.dirname(_path)
                 temp["iftag"]=True
+                temp["filetype"]=''
                 # print "FPATH::",temp["encode"]
                 flist.append(temp)
             for i in item:
@@ -84,10 +93,14 @@ class Index:
                         temp['type'] = "general"
 
 
-                temp["time"] = time.strftime("%H:%M:%S %Y-%m-%d",
+                temp["time"] = time.strftime("%H:%M %Y-%m-%d",
                         time.localtime(os.path.getmtime(os.path.join(path, i))))
                 
                 size = os.path.getsize(os.path.join(path, i))
+                
+                if size>(int(config.unpack_limit)*1024*1024): temp['isbig'] = True
+                else : temp['isbig'] = False
+                
                 if size < 1024:
                     size = str(size) + ".0 B"
                 elif size < 1024 * 1024:
@@ -96,14 +109,16 @@ class Index:
                     size = "%0.1f MB" % (size/1024.0/1024.0)
                 else :
                     size = "%0.1f GB" % (size/1024.0/1024.0/1024.0)
-                
+
                 temp["size"] = size
                 temp["encode"] = host+quote(os.path.join(_path, i).encode('utf-8'))
                 temp["iftag"]=False
+                with magic.Magic() as m:
+                    temp["filetype"]=m.id_filename(os.path.join(path, i).encode('utf-8'))
 
                 flist.append(temp)
             
-            yield render.layout(flist) 
+            yield render.layout(flist)
         
         # return a file
         else:
@@ -124,10 +139,14 @@ class Index:
 
     def DELETE(self,filename):
         try:
-            filename = filename.encode('utf-8') 
-            os.remove(os.path.join(root,filename))
-        except:
-            return "success" 
+            filename = filename.encode('utf-8').replace('\\','/')
+            if os.path.isdir(os.path.join(root,filename)):
+                shutil.rmtree(os.path.join(root,filename))
+            else:
+                os.remove(os.path.join(root,filename))
+        except Exception,e:
+            print e
+            return "success"
 
 
     def POST(self,filename):
@@ -145,11 +164,24 @@ class Index:
             
         return "<script>parent.location.reload()</script>" 
 
+if config.uncompression_enable:
+    class Unpack:
+        def POST(self):
+            x = web.input(file={})
+            if 'file' in x:
+                file= x.file
+            if 'path' in x:
+                path= root + x.path.replace('\\','/')
+            path.replace('//','/')
+            uncompression.unpack(path,file)
+            # return "<script>parent.location.reload()</script>"
 # start the application
 # it's adaptable to both uwsgi start & python start
 app = web.application(urls,globals())
 application = app.wsgifunc()
 
 if __name__ == "__main__":
+    if not os.path.exists(root):
+        print 'Root dir not exists! Please check your config.py.'
     app.run()
     

@@ -108,10 +108,14 @@ and Modified by Ace(i.orzace.com)
 function delete_file(obj)
 {
     var name = obj.name;
-    if(confirm("Delete " + name + ", are you sure?"))
+    var file="";
+    if(document.location.pathname=='/') file = name;
+    else file = document.location.pathname + '/' + name;
+    if(confirm("是否删除" + name + "？"))
     {
         $.ajax({
-            url: document.location.pathname + name,
+        //server work on linux, so there is '/', not '\'
+            url: file,
             type: 'DELETE',
             success: function(data){
                 window.location.reload();
@@ -121,3 +125,41 @@ function delete_file(obj)
     else
         return;
 }
+
+function view_file(obj)
+{
+	var name;
+	if(document.location.pathname == '/')
+    	name = document.location.pathname + obj.name;
+    else
+    	name = document.location.pathname + '/' + obj.name;
+    $('#panel').modal();
+    $('#panel .modal-header').text(obj.name);
+    $('#panel .modal-body').empty();
+    $('#panel .modal-body').append("<img title='" + obj.name + "' src='" + name + "'/>");
+}
+
+function unpack_file(obj,isbig)
+{
+    var name = obj.name;
+    var flag=true;
+    if(isbig){
+        flag = confirm("您解压的文件过大，是否继续？");
+    }
+    if(flag){
+        $.ajax({
+        //server work on linux, so there is '/', not '\'
+            url: '/Unpack',
+            type: 'POST',
+            success: function(data){
+                window.location.reload();
+            },
+            data: {
+                file:name,
+                path:document.location.pathname
+            }
+        });
+    }
+}
+
+$("[data-toggle='tooltip']").tooltip();

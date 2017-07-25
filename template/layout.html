@@ -64,13 +64,29 @@ $code:
         ".exe":"/static/img/file-icon/exe.png",
         ".apk":"/static/img/file-icon/apk.png",
     }
+$code:
+    imgtype = [
+    ".jpeg",
+    ".png",
+    ".jpg",
+    ".svg",
+    ".bmp",
+    ".gif",
+    ]
+$code:
+    packtype = [
+    ".rar",
+    ".zip",
+    ".gz",
+    ".jar",
+    ]
 
-<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn" >
     <head>
-        <title>文件</title>
+        <title>聪的文件</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="shortcut icon" href="/static/img/favicon.ico" type="image/x-icon" >
+        <meta name="theme-color" content="#333">
+	<link rel="shortcut icon" href="/static/img/favicon.ico" type="image/x-icon" >
         <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <style type="text/css">
             body {
@@ -117,8 +133,9 @@ $code:
         <script type="text/javascript" src="/static/js/jquery.js"></script>
         <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/static/js/bootstrap.file-input.js"></script>
+
     </head>
-    <body style="font-family:Microsoft YaHei;">
+    <body style="font-family:Microsoft YaHei;" ng-app="app">
 
         <iframe style="display:none" id="ifm" name="ifm"></iframe>
         <!--导航条-->
@@ -145,6 +162,7 @@ $code:
                     <thead>
                         <tr bgcolor="#333333">
                             <td><font color="white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文件名</font></td>
+                            <td width="45"><font color="white">功能</font></td>
                             <td width="80"><font color="white">大小</font></td>
                             <td width="150"><font color="white">时间</font></td>
                             <td width="45"><font color="white">删除</font></td>
@@ -152,12 +170,21 @@ $code:
                     </thead>
                     <tbody id="dir_table" >
                         $for item in list:
-                        <tr><td><img src="$icon[item['type']]" style="width: 40px"></img><a href="$item['encode']">$item["name"]</td>
+                        <tr><td><a href="#" class="tooltip-test" data-toggle="tooltip" data-placement="right" title="$item['filetype']"><img src="$icon[item['type']]" style="width: 40px"></img></a><a href="$item['encode']">$item["name"]</td>
+                        <td>
+                        $if item['type'] in imgtype:
+                            <a title="查看图片" name="$item['name']" onclick="view_file(this)" href="#"><img src="/static/img/view.png" ></img>
+                        $elif item['type'] in packtype:
+                                $if item['isbig']:
+                                    <a title="解压文件" name="$item['name']" onclick="unpack_file(this,true)" href="#"><img src="/static/img/unpack.png" ></img>
+                                $else:
+                                    <a title="解压文件" name="$item['name']" onclick="unpack_file(this,false)" href="#"><img src="/static/img/unpack.png" ></img>
+                        </td>
                             <td>$item["size"]</td>
                             <td>$item["time"]</td>
                             <td>
                             $if not item["iftag"]:
-                                <a title="Delete" name="$item['name']" onclick="delete_file(this)" href="#"><img src="/static/img/bin.png" ></img></a>
+                                <a title="删除" name="$item['name']" onclick="delete_file(this)" href="#"><img src="/static/img/bin.png" ></img></a>
                             </td></tr>
                     </tbody>
                 </table>
@@ -177,12 +204,17 @@ $code:
         <footer class="footer">
             <div class="container-fluid">
                 <p><font color="gray">
-               		代码来自<a href="https://github.com/goace/personal-file-sharing-center">Github</a>
+               		聪的文件，请不要影响我的使用，代码来自<a href="https://github.com/goace/personal-file-sharing-center">Github</a>，QQ：1172170892
                </font>
             </p>
-            </div>
+            <a href="http://172.21.6.101:9091">电影下载</a>
+            <a href="http://172.21.6.101">信南204官网</a>
+	    </div>
         </footer>
 		<!--Footer结束-->
+		<div class="modal fade" id="panel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-header">图像预览</div>
+			<div class="modal-body"></div>
         <script type="text/javascript" src="/static/js/filedrag.js"></script>
 	</body>
 </html>
