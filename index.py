@@ -110,7 +110,10 @@ class Index:
                 else :
                     size = "%0.1f GB" % (size/1024.0/1024.0/1024.0)
 
-                temp["size"] = size
+                if os.path.isdir(os.path.join(path, i)):
+                    temp["size"] = ''
+                else:
+                    temp["size"] = size
                 temp["encode"] = host+quote(os.path.join(_path, i).encode('utf-8'))
                 temp["iftag"]=False
                 with magic.Magic() as m:

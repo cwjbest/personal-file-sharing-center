@@ -3,7 +3,7 @@
 
 #文件目录
 #file dir
-root = "/mnt/other/AndroidStudioProjects"
+root = "."
 
 #ip地址，形式必须如下
 #ip address, like this:
