@@ -45,5 +45,10 @@ Be sure to change the `host` in file `config.py`into your own, or it can't work.
 可以在任意位置删除任意的文件目录
 ## 增加解压缩哟包
 实际上是针对于linux系统，使用系统程序进行解压，现在主要能对`rar`、`zip`、`tar.gz`进行解压，因此需要安装`tar`、`unzip`和`unrar`，这个功能目前问题较多，因此关闭请修改`config.py`里的`uncompression_enable`
+## 对[zhcong](https://github.com/zhcong/personal-file-sharing-center)的添加
+新增文件上传时，根据web端目录上传，以往的版本不管web端打开的是哪个目录，都会上传都根目录
+## 注意
+1. 目前还不支持拖拽的方式
+2. 中文目录会乱码，尽量用英文
 ## License
 Iron Man is available under the GPLv2. See the LICENSE file for more info.
