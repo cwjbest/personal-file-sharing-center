@@ -5,7 +5,7 @@ $code:
         #//default
         "dir":"/static/img/file-icon/folder.png",
         "general":"/static/img/file-icon/file.png",
-        
+
         #//codes
         ".h":"/static/img/file-icon/head.png",
         ".cpp":"/static/img/file-icon/cpp.png",
@@ -29,7 +29,7 @@ $code:
         ".gif":"/static/img/file-icon/pic.png",
         ".ai":"/static/img/file-icon/ai.png",
         ".psd":"/static/img/file-icon/psd.png",
-        
+
         #//music
         ".mp3":"/static/img/file-icon/music.png",
 
@@ -83,7 +83,7 @@ $code:
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" lang="zh-cn" >
     <head>
-        <title>文件</title>
+        <title>cwj的文件</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="theme-color" content="#333">
 	<link rel="shortcut icon" href="/static/img/favicon.ico" type="image/x-icon" >
@@ -104,7 +104,7 @@ $code:
             }
             .input
             {
-                font: 12px Arial, Helvetica, sans-serif;
+                font: 15px Arial, Helvetica, sans-serif;
                 border: 1px solid #86888B;
             }
             #filedrag
@@ -133,6 +133,11 @@ $code:
         <script type="text/javascript" src="/static/js/jquery.js"></script>
         <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/static/js/bootstrap.file-input.js"></script>
+        <script type="text/javascript">
+            function f() {
+                document.getElementById('upload_path').value = document.location.pathname;
+            }
+        </script>
 
     </head>
     <body style="font-family:Microsoft YaHei;" ng-app="app">
@@ -173,7 +178,7 @@ $code:
                         <tr><td><a href="#" class="tooltip-test" data-toggle="tooltip" data-placement="right" title="$item['filetype']"><img src="$icon[item['type']]" style="width: 40px"></img></a><a href="$item['encode']">$item["name"]</td>
                         <td>
                         $if item['type'] in imgtype:
-                            <a title="查看图片" name="$item['name']" onclick="view_file(this)" href="#"><img src="/static/img/view.png" ></img>
+                            <a title="查看图片" name="$item['name']" onclick="view_file(this, window.location.pathname)" href="#"><img src="/static/img/view.png" ></img>
                         $elif item['type'] in packtype:
                                 $if item['isbig']:
                                     <a title="解压文件" name="$item['name']" onclick="unpack_file(this,true)" href="#"><img src="/static/img/unpack.png" ></img>
@@ -189,23 +194,24 @@ $code:
                     </tbody>
                 </table>
             </div>
-                            <form id="upload" action="/" method="POST" enctype="multipart/form-data" target="ifm">
+                <form id="upload" action="/index.py" method="POST" enctype="multipart/form-data" target="ifm">
                     <fieldset>
                         <div style="float:left;margin-left: 10%;margin-right: 20px;padding-top: 2%;">
-                            <input type="file" id="fileselect" name="file" / title="选择文件" onchange="this.form.submit();">
+                            <input type="file" id="fileselect" name="file" title="选择文件" onclick="f()" onchange="this.form.submit();">
+                            <input type='text' name="path" value="" id="upload_path" style="display: none">
                         </div>
                         <div id="filedrag" style="float:left;width:60%;">将文件拖拽至这里</div>
                     </fieldset>
                 </form>
         </div>
         <!--文件列表结束-->
-		
+
 		<!--Footer-->
         <footer class="footer">
             <div class="container-fluid">
                 <p><font color="gray">
-               		文件
-               </font>
+        		cwjbest的文件
+		</font>
             </p>
 	    </div>
         </footer>

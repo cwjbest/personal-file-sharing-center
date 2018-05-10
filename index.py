@@ -8,6 +8,9 @@ from urllib import quote
 from pinyin import PinYin
 import magic
 import shutil
+import sys
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 if config.uncompression_enable:
     import uncompression
@@ -152,20 +155,22 @@ class Index:
             return "success"
 
 
-    def POST(self,filename):
+    def POST(self, filename):
 
         # save a file to disk
         x = web.input(file={})
-        
+        y = web.input(path={})
         if 'file' in x:
-            filepath= x.file.filename.replace('\\','/')     # replaces the windows-style slashes with linux ones.
-            filename = filepath.split('/')[-1]              # splits the and chooses the last part (the filename with extension)
+            filepath = x.file.filename.replace('\\', '/')  # replaces the windows-style slashes with linux ones.
+            filename = filepath.split('/')[-1]  # splits the and chooses the last part (the filename with extension)
             filename = unicode(filename, "utf8")
-            fout = open(os.path.join(root,filename),'w')    # creates the file where the uploaded file should be stored
-            fout.write(x.file.file.read())                  # writes the uploaded file to the newly created file.
-            fout.close()                                    # closes the file, upload complete.
-            
-        return "<script>parent.location.reload()</script>" 
+            path = y.path
+            fout = open(os.path.join(root + path, filename), 'w')  # creates the file where the uploaded file should be stored
+            fout.write(x.file.file.read())  # writes the uploaded file to the newly created file.
+            fout.close()  # closes the file, upload complete.
+
+        return "<script>parent.location.reload()</script>"
+
 
 if config.uncompression_enable:
     class Unpack:
