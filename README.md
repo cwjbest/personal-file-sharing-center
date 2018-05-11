@@ -31,20 +31,6 @@ If you have no idea how to set nginx and uwsgi, the following may help...
 * Multiple file upload.
 * User authentication.
 
-## 对[原作者](https://github.com/goace/personal-file-sharing-center/network)添加
-
-添加目录支持和文件断点下载，以及大文件的下载
-Add directory support and file breakpoint download, as well as large files can be downloaded
-## 注意(Careful)
-一定要把`config.py`里的host修改成你自己的，修改端口好像要到web文件夹里修改
-
-Be sure to change the `host` in file `config.py`into your own, or it can't work.
-## 增加汉字拼音的排序
-感谢[cleverdeng](https://github.com/cleverdeng/pinyin.py)提供的拼音库
-## 增加目录删除，多级文件删除
-可以在任意位置删除任意的文件目录
-## 增加解压缩哟包
-实际上是针对于linux系统，使用系统程序进行解压，现在主要能对`rar`、`zip`、`tar.gz`进行解压，因此需要安装`tar`、`unzip`和`unrar`，这个功能目前问题较多，因此关闭请修改`config.py`里的`uncompression_enable`
 ## 对[zhcong](https://github.com/zhcong/personal-file-sharing-center)的添加
 新增文件上传时，根据web端目录上传，以往的版本不管web端打开的是哪个目录，都会上传都根目录
 ## 注意
