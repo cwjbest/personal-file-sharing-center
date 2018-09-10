@@ -32,9 +32,9 @@ If you have no idea how to set nginx and uwsgi, the following may help...
 * User authentication.
 
 ## 对[zhcong](https://github.com/zhcong/personal-file-sharing-center)的添加
-新增文件上传时，根据web端目录上传，以往的版本不管web端打开的是哪个目录，都会上传都根目录
+新增文件上传时，根据web端目录上传，以往的版本不管web端打开的是哪个目录，都会上传到根目录
 ## 注意
-1. 目前还不支持拖拽的方式
+1. 目前按照文件夹上传还不支持拖拽的方式
 2. 中文目录会乱码，尽量用英文
 ## License
 Iron Man is available under the GPLv2. See the LICENSE file for more info.
